@@ -7,7 +7,6 @@
 #include "defines.h"
 #include "arithmeticConCoder.h"
 #include "arithmeticConCoderTools.h"
-#include "definesCon.h"
 
 using namespace std;
 
@@ -90,7 +89,6 @@ int main(){
 		freq[y][x]++;
 	}
 
-	fstream pr;
 	pr.open("PrCon.txt");
 	for (int i = 0; i < alphabetSize; i++)
 	{
