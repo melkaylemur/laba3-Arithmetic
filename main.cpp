@@ -5,11 +5,14 @@
 #include "arithmeticCoder.h"
 #include "arithmeticCoderTools.h"
 #include "defines.h"
+#include "arithmeticConCoder.h"
+#include "arithmeticConCoderTools.h"
+#include "definesCon.h"
 
 using namespace std;
 
-int main()
-{
+int main(){
+//Arithmetic
 	ArithmeticCoder *arCoder = new ArithmeticCoder();
 	int alphabetSize = No_of_chars;
 	FILE *f;
@@ -62,7 +65,72 @@ int main()
 	}
 	arCoder->endDecode();
 
-	//system("pause");
+//Context Arithmetic
+	ArithmeticConCoder *arConCoder = new ArithmeticConCoder();
+
+	int **freq = new int*[alphabetSize + 2];
+	for (int i = 0; i < alphabetSize + 2; i++){
+		freq[i] = new int[alphabetSize + 2];
+		for (int i2 = 0; i2 < alphabetSize + 2; i2++)
+		{
+			freq[i][i2] = 0;
+		}
+
+	}
+
+	for (int i = 0; i < alphabetSize + 2; i++)
+	{
+		freq[i][EOF_symbol] = 1;
+	}
+
+	for (int i = 0; i < size; i++)
+	{
+		int y = (int)inputData[i];
+		int x = (int)inputData[i + 1];
+		freq[y][x]++;
+	}
+
+	fstream pr;
+	pr.open("PrCon.txt");
+	for (int i = 0; i < alphabetSize; i++)
+	{
+		for (int i2 = 0; i2 < alphabetSize; i2++)
+		{
+			pr << freq[i][i2] << " ";
+		}
+		pr << endl;
+	}
+	pr.close();
+
+	FILE *f2;
+	f2 = fopen("stream_encode_2", "wb");
+	fwrite(&inputData[0], 1, 1, f2);
+	fclose(f2);
+
+	arConCoder->initEncoder(inputData, size, freq[inputData[0]]);
+	for (int i = 1; i < size; i++)
+	{
+		cout << i << endl;
+		arCoder->encodeSymbol(inputData[i]);
+		arCoder->initCum_freq(freq[inputData[i]]);
+	}
+	arConCoder->encodeSymbol(EOF_symbol);
+
+	arConCoder->endEncode();
+	fclose(f);
+
+	char frstSymb = 0;
+	arConCoder->initDecoder(&frstSymb);
+	arConCoder->initCum_freq(freq[frstSymb]);
+
+	int symbol;
+	for (int i = 1; i < size; i++)
+	{
+		symbol = arCoder->decodeSymbol();
+		arConCoder->initCum_freq(freq[symbol]);
+		if (symbol == EOF_symbol) break;
+	}
+	arConCoder->endDecode();
 	return 0;
 }
 
