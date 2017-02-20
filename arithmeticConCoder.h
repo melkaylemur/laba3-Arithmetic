@@ -9,22 +9,22 @@
 class ArithmeticConCoder{
 
 private:
-int char_to_index[No_of_chars];	
-unsigned char index_to_char[No_of_symbols + 1];
-int cum_freq[No_of_symbols + 1];
-int high = Top_value;
-int low = 0;
-int bits_to_follow = 0;
-ArithmeticConCoderTools *arTools;
+	int char_to_index[No_of_chars];	
+	unsigned char index_to_char[No_of_symbols + 1];
+	int cum_freq[No_of_symbols + 1];
+	int high = Top_value;
+	int low = 0;
+	int bits_to_follow = 0;
+	ArithmeticConCoderTools *arTools;
 
-code_value value;
-code_value lowDec, highDec;
+	code_value value;
+	code_value lowDec, highDec;
 
-FILE *foutDecode;
-void bit_plus_follow(int bit);
-void start_encoding();
-void start_decoding();
-char firstSymbol = 0;
+	FILE *foutDecode;
+	void bit_plus_follow(int bit);
+	void start_encoding();
+	void start_decoding();
+	char firstSymbol = 0;
 public:
 	ArithmeticConCoder();
 	~ArithmeticConCoder();
