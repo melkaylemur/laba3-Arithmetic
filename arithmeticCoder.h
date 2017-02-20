@@ -1,8 +1,6 @@
 #ifndef ARITHMETIC_CODER
 #define ARITHMETIC_CODER
 
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <stdio.h>
 #include <stdlib.h> 
 #include "arithmeticCoderTools.h"
