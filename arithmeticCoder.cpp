@@ -37,7 +37,7 @@ void ArithmeticCoder::encodeSymbol(int symbol){
 	range = (long)(high - low) + 1;
 	high = low + (range*cum_freq[symbol - 1]) / cum_freq[0] - 1;
 	low = low + (range*cum_freq[symbol]) / cum_freq[0];
-	for (;;) {
+	while(true) {
 		if (high<Half) {
 			bit_plus_follow(0);
 		}
@@ -100,7 +100,7 @@ int ArithmeticCoder::decodeSymbol() {
 	for (symbol = 1; cum_freq[symbol]>cum; symbol++);
 	highDec = lowDec + (range*cum_freq[symbol - 1]) / cum_freq[0] - 1;
 	lowDec = lowDec + (range*cum_freq[symbol]) / cum_freq[0];
-	for (;;) {
+	while(true) {
 		if (highDec<Half) {
 		}
 		else if (lowDec >= Half) {
@@ -122,13 +122,11 @@ int ArithmeticCoder::decodeSymbol() {
 	return symbol;
 }
 
-void ArithmeticCoder::endEncode()
-{
+void ArithmeticCoder::endEncode(){
 	arTools->closeEncodeFile();
 }
 
-void ArithmeticCoder::endDecode()
-{
+void ArithmeticCoder::endDecode(){
 	fclose(foutDecode);
 	arTools->closeDecodeFile();
 }

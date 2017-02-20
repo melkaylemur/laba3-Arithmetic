@@ -39,7 +39,6 @@ int ArithmeticCoderTools::input_bit(){
 			garbage_bits += 1;
 			if (garbage_bits>Code_value_bits - 2) {
 				fprintf(stderr, "Bad input file\n");
-				system("pause");
 				exit(-1);
 			}
 		}

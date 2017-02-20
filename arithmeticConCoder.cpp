@@ -3,36 +3,29 @@
 ArithmeticConCoder::ArithmeticConCoder(){}
 ArithmeticConCoder::~ArithmeticConCoder(){}
 
-void ArithmeticConCoder::initCum_freq(int *freq){
+void ArithmeticConCoder::initCum_freq(int *freqCon){
 	int noOfSymbols = No_of_symbols;
 	int noOfChars = No_of_chars;
-
 	for (int i = 0; i<noOfChars; i++) {
 		char_to_index[i] = i + 1;
 		index_to_char[i + 1] = i;
 	}
 	cum_freq[noOfSymbols] = 0;
 	for (int i = noOfSymbols; i > 0; i--){
-		cum_freq[i - 1] = cum_freq[i] + freq[i];
-	}
-	if (cum_freq[0] > Max_frequency){
-		printf("cumFreq>Max_freq");
-		abort();
+		cum_freq[i - 1] = cum_freq[i] + freqCon[i];
 	}
 
 }
 void ArithmeticConCoder::initEncoder(char* data, int size, int *freq){
 	int noOfSymbols = No_of_symbols;
 	int noOfChars = No_of_chars;
-
-	arTools = new ArithmeticCoderTools();
+	arTools = new ArithmeticConCoderTools();
 	for (int i = 0; i<noOfChars; i++){
-	char_to_index[i] = i + 1; 
-	index_to_char[i + 1] = i;
+	    char_to_index[i] = i + 1; 
+	    index_to_char[i + 1] = i;
 	}
 	cum_freq[noOfSymbols] = 0;
-	for (int i = noOfSymbols; i > 0; i--)
-	{												/
+	for (int i = noOfSymbols; i > 0; i--){
 		cum_freq[i - 1] = cum_freq[i] + freq[i];
 	}
 	arTools->start_outputing_bits();
@@ -40,8 +33,7 @@ void ArithmeticConCoder::initEncoder(char* data, int size, int *freq){
 	
 }
 
-void ArithmeticConCoder::start_encoding()
-{   
+void ArithmeticConCoder::start_encoding(){   
 	low = 0;
     	high = Top_value;
     	bits_to_follow = 0;
@@ -52,7 +44,7 @@ void ArithmeticConCoder::encodeSymbol(int symbol){
 	range = (long)(high - low) + 1;
 	high = low +(range*cum_freq[symbol - 1]) / cum_freq[0] - 1;
 	low = low + (range*cum_freq[symbol]) / cum_freq[0];
-	for (;;) {
+	while(true) {
 		if (high<Half) {
 			bit_plus_follow(0);
 		}
@@ -86,21 +78,18 @@ void ArithmeticConCoder::done_encoding(){
 	else bit_plus_follow(1);
 }
 
-void ArithmeticConCoder::update_model(int symbol)
-{
+void ArithmeticConCoder::update_model(int symbol){
 }
 
-void ArithmeticConCoder::initDecoder(char *frstSymb)
-{
+void ArithmeticConCoder::initDecoder(char *frstSymb){
 	*frstSymb = arTools->start_inputing_bits();
 	firstSymbol = *frstSymb;
 	start_decoding();
 }
 
-void ArithmeticConCoder::start_decoding()
-{
+void ArithmeticConCoder::start_decoding(){
 	int i;
-	foutDecode = fopen(DecodeFileName, "wb");
+	foutDecode = fopen(ConDecodeFileName, "wb");
 	fwrite(&firstSymbol, 1, 1, foutDecode);
 	value = 0;
 	for (i = 1; i <= Code_value_bits; i++) {
@@ -118,10 +107,9 @@ int ArithmeticConCoder::decodeSymbol(){
 	range = (long)(highDec - lowDec) + 1;
 	cum =(((long)(value - lowDec) + 1)*cum_freq[0] - 1) / range;
 	for (symbol = 1; cum_freq[symbol]>cum; symbol++);
-	highDec = lowDec +											/
-	(range*cum_freq[symbol - 1]) / cum_freq[0] - 1;
+	highDec = lowDec +(range*cum_freq[symbol - 1]) / cum_freq[0] - 1;
 	lowDec = lowDec +(range*cum_freq[symbol]) / cum_freq[0];
-	for (;;) {									
+	while(true) {									
 		if (highDec<Half) {
 		}
 		else if (lowDec >= Half) {
@@ -141,18 +129,15 @@ int ArithmeticConCoder::decodeSymbol(){
 
 	}
 	char charBuffer = (char)symbol;
-
 	fwrite(&charBuffer, 1, 1, foutDecode);
 	return symbol;
 }
 
-void ArithmeticConCoder::endEncode()
-{
+void ArithmeticConCoder::endEncode(){
 	arTools->closeEncodeFile();
 }
 
-void ArithmeticConCoder::endDecode()
-{
+void ArithmeticConCoder::endDecode(){
 	fclose(foutDecode);
 	arTools->closeDecodeFile();
 }

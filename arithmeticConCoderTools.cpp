@@ -6,7 +6,7 @@ ArithmeticConCoderTools::~ArithmeticConCoderTools(){}
 void ArithmeticConCoderTools::start_outputing_bits()
 {
 	
-	fout = fopen(EncodeFileName, "ab");
+	fout = fopen(ConEncodeFileName, "ab");
 	fseek(fout, 1, SEEK_SET);
 	buffer = 0;
 	bits_to_go = 8;
@@ -30,7 +30,7 @@ void ArithmeticConCoderTools::done_outputing_bits()
 char ArithmeticConCoderTools::start_inputing_bits()
 {
 	char ret = 0;
-	fin = fopen(EncodeFileName, "rb");
+	fin = fopen(ConEncodeFileName, "rb");
 	fread(&ret, 1, 1, fin);
 	bits_to_goInput = 0;
 	garbage_bits = 0;
@@ -47,7 +47,6 @@ int ArithmeticConCoderTools::input_bit()
 			garbage_bits += 1;					
 			if (garbage_bits>Code_value_bits - 2) {	
 				fprintf(stderr, "Bad input file\n");
-				system("pause");
 				exit(-1);
 			}
 		}
